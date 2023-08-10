@@ -3,12 +3,12 @@ using UnityEngine;
 [RequireComponent(typeof(Animator), typeof(CharacterController))]
 public class IsometricCharacterController : MonoBehaviour
 {
-    [SerializeField] private float movementSpeed = 5f;
+    [SerializeField] private float _movementSpeed = 5f;
     [SerializeField] private JoystickInputHandler _joystick;
-    private CharacterController characterController;
-    private Animator animator;
+    private CharacterController _characterController;
+    private Animator _animator;
     public MovementState State { get; private set; }
-    private Vector2 movementDirection = Vector2.zero;
+    private Vector2 _movementDirection = Vector2.zero;
 
     public enum MovementState
     {
@@ -17,8 +17,8 @@ public class IsometricCharacterController : MonoBehaviour
 
     private void Start()
     {
-        characterController = GetComponent<CharacterController>();
-        animator = GetComponent<Animator>();
+        _characterController = GetComponent<CharacterController>();
+        _animator = GetComponent<Animator>();
     }
 
     private void FixedUpdate()
@@ -28,7 +28,7 @@ public class IsometricCharacterController : MonoBehaviour
 
     public void StopMoving()
     {
-        characterController.SimpleMove(Vector3.zero);
+        _characterController.SimpleMove(Vector3.zero);
     }
 
     private void Update()
@@ -38,15 +38,15 @@ public class IsometricCharacterController : MonoBehaviour
 
     private void Move()
     {
-        movementDirection = _joystick.CurrentPosition;
-        State = (movementDirection.x == 0 && movementDirection.y == 0) ? MovementState.Idle : MovementState.Move;
+        _movementDirection = _joystick.CurrentPosition;
+        State = (_movementDirection.x == 0 && _movementDirection.y == 0) ? MovementState.Idle : MovementState.Move;
 
-        Vector2 normalizedDirection = movementDirection.normalized;
+        Vector2 normalizedDirection = _movementDirection.normalized;
         Vector3 movement = Quaternion.Euler(0f, Camera.main.transform.eulerAngles.y, 0f) * new Vector3(normalizedDirection.x, 0f, normalizedDirection.y);
 
         LookRotate(movement);
        
-        characterController.SimpleMove(movement * movementSpeed);
+        _characterController.SimpleMove(movement * _movementSpeed);
     }
 
     private void LookRotate(Vector3 movement)
@@ -66,12 +66,12 @@ public class IsometricCharacterController : MonoBehaviour
         switch (State)
         {
             case MovementState.Idle:
-                animator.SetBool("isIdle", true);
-                animator.SetBool("isMoving", false);
+                _animator.SetBool("isIdle", true);
+                _animator.SetBool("isMoving", false);
                 break;
             case MovementState.Move:
-                animator.SetBool("isIdle", false);
-                animator.SetBool("isMoving", true);
+                _animator.SetBool("isIdle", false);
+                _animator.SetBool("isMoving", true);
                 break;
             default:
                 break;
