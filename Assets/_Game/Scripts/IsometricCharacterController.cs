@@ -1,21 +1,19 @@
-using System;
 using UnityEngine;
 
 [RequireComponent(typeof(Animator), typeof(CharacterController))]
 public class IsometricCharacterController : MonoBehaviour
 {
     [SerializeField] private float movementSpeed = 5f;
+    [SerializeField] private JoystickInputHandler _joystick;
     private CharacterController characterController;
     private Animator animator;
-    public MovementState state = MovementState.Idle;
+    public MovementState State { get; private set; }
     private Vector2 movementDirection = Vector2.zero;
 
     public enum MovementState
     {
         Idle, Move
-    }
-
-    public float MovementSpeed { get { return movementSpeed; } }
+    }    
 
     private void Start()
     {
@@ -40,15 +38,13 @@ public class IsometricCharacterController : MonoBehaviour
 
     private void Move()
     {
-        movementDirection.x = Input.GetAxis("Horizontal");
-        movementDirection.y = Input.GetAxis("Vertical");
-        state = (movementDirection.x == 0 && movementDirection.y == 0) ? MovementState.Idle : MovementState.Move;
+        movementDirection = _joystick.CurrentPosition;
+        State = (movementDirection.x == 0 && movementDirection.y == 0) ? MovementState.Idle : MovementState.Move;
 
         Vector2 normalizedDirection = movementDirection.normalized;
         Vector3 movement = Quaternion.Euler(0f, Camera.main.transform.eulerAngles.y, 0f) * new Vector3(normalizedDirection.x, 0f, normalizedDirection.y);
 
         LookRotate(movement);
-
        
         characterController.SimpleMove(movement * movementSpeed);
     }
@@ -63,20 +59,11 @@ public class IsometricCharacterController : MonoBehaviour
             targetRotation.z = 0;
             transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * 10f);
         }
-    }
-
-    private void UpdateAnimator(Vector2 movementDirection)
-    {
-        if (animator != null)
-        {
-            animator.SetFloat("Horizontal", movementDirection.x);
-            animator.SetFloat("Vertical", movementDirection.y);
-        }
-    }
+    }   
 
     private void AnimatorBoolController()
     {
-        switch (state)
+        switch (State)
         {
             case MovementState.Idle:
                 animator.SetBool("isIdle", true);
@@ -89,5 +76,6 @@ public class IsometricCharacterController : MonoBehaviour
             default:
                 break;
         }
+        //TODO: use trigers for animations, not bools
     }
 }
