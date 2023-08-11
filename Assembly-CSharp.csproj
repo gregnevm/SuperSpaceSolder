@@ -57,8 +57,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\_Game\Scripts\IsometricCharacterController.cs" />
-    <Compile Include="Assets\_Game\Scripts\CameraFollow.cs" />
     <Compile Include="Assets\_Game\Scripts\JoystickInputHandler.cs" />
+    <Compile Include="Assets\_Game\Scripts\CameraFollow.cs" />
+    <Compile Include="Assets\_Game\Scripts\Weapon\Gun.cs" />
+    <Compile Include="Assets\_Game\Scripts\Interfaces\IDamageable.cs" />
+    <Compile Include="Assets\_Game\Scripts\Enemy.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Location\Shaders\BackgroundAndCharacters\PlanarRealtimeReflection.shader" />
